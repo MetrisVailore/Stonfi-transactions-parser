@@ -24,7 +24,7 @@ def get_transaction(api_key, address, lt, tx_hash):
                         return result["result"][0]
                     elif tx_hash is not None and objects['transaction_id']['hash'] == tx_hash:
                         return result["result"][i]
-                    # return result["result"]["objects"]
+            return result["result"][0]
         else:
             print("Ошибка API:", result.get("error", "Неизвестная ошибка"))
             return None
