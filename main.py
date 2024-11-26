@@ -2,21 +2,29 @@ import requests
 import base64
 import json
 
-
 def get_transaction(api_key, address, lt, tx_hash):
     """Получить транзакцию через Toncenter API"""
     url = "https://toncenter.com/api/v2/getTransactions"
     params = {
         "address": address,
-        "lt": lt,
-        "hash": tx_hash,
         # "api_key": api_key
     }
     response = requests.get(url, params=params)
     if response.status_code == 200:
         result = response.json()
         if result.get("ok", False):
-            return result["result"][0]
+            for i, objects in enumerate(result["result"]):
+                if lt is not None and objects['transaction_id']['lt'] == lt:
+                    if tx_hash is not None and objects['transaction_id']['hash'] == tx_hash:
+                        return result["result"][i]
+                    elif tx_hash is None:
+                        return result["result"][i]
+                elif lt is None:
+                    if tx_hash is None:
+                        return result["result"][0]
+                    elif tx_hash is not None and objects['transaction_id']['hash'] == tx_hash:
+                        return result["result"][i]
+                    # return result["result"]["objects"]
         else:
             print("Ошибка API:", result.get("error", "Неизвестная ошибка"))
             return None
