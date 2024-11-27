@@ -7,6 +7,8 @@ def get_transaction(api_key, address, lt, tx_hash):
     url = "https://toncenter.com/api/v2/getTransactions"
     params = {
         "address": address,
+        "lt": lt,
+        "hash": tx_hash
         # "api_key": api_key
     }
     response = requests.get(url, params=params)
